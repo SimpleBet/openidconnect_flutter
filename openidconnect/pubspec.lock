@@ -278,9 +278,11 @@ packages:
   openidconnect_web:
     dependency: "direct main"
     description:
-      name: openidconnect_web
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: openidconnect_web
+      ref: edit_useragent
+      resolved-ref: "1624d75fc6b127463e8d6043b4062ade953bd02b"
+      url: "git://github.com/SimpleBet/openidconnect_flutter.git"
+    source: git
     version: "1.0.10"
   package_config:
     dependency: transitive

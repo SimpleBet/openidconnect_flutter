@@ -14,7 +14,11 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   openidconnect_platform_interface: ^1.0.2
-  openidconnect_web: ^1.0.10
+  openidconnect_web:
+    git:
+      url: git://github.com/SimpleBet/openidconnect_flutter.git
+      path: openidconnect_web
+      ref: edit_useragent
   flutter_secure_storage: ^5.0.0-beta.1
   jwt_decoder: ^2.0.1
 
