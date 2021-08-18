@@ -11,39 +11,48 @@ class OpenIdConnectAndroidiOS {
   }) async {
     //Create the url
 
-    final result = await showDialog<String?>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return AlertDialog(
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.pop(dialogContext, null),
-              icon: Icon(Icons.close),
+    String? result;
+
+    if (Platform.isIOS) {
+      AndroidIosAuth.authenticate(
+          url: authorizationUrl, callbackUrlScheme: redirectUrl);
+    } else {
+      result = await showDialog<String?>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) {
+          return AlertDialog(
+            actions: [
+              IconButton(
+                onPressed: () => Navigator.pop(dialogContext, null),
+                icon: Icon(Icons.close),
+              ),
+            ],
+            content: Container(
+              width:
+                  min(popupWidth.toDouble(), MediaQuery.of(context).size.width),
+              height: min(
+                  popupHeight.toDouble(), MediaQuery.of(context).size.height),
+              child: flutterWebView.WebView(
+                javascriptMode: flutterWebView.JavascriptMode.unrestricted,
+                initialUrl: authorizationUrl,
+                onPageFinished: (url) {
+                  if (url.startsWith(redirectUrl)) {
+                    Navigator.pop(dialogContext, url);
+                  }
+                },
+              ),
             ),
-          ],
-          content: Container(
-            width:
-                min(popupWidth.toDouble(), MediaQuery.of(context).size.width),
-            height:
-                min(popupHeight.toDouble(), MediaQuery.of(context).size.height),
-            child: flutterWebView.WebView(
-              javascriptMode: flutterWebView.JavascriptMode.unrestricted,
-              initialUrl: authorizationUrl,
-              onPageFinished: (url) {
-                if (url.startsWith(redirectUrl)) {
-                  Navigator.pop(dialogContext, url);
-                }
-              },
-            ),
-          ),
-          title: Text(title),
-        );
-      },
-    );
+            title: Text(title),
+          );
+        },
+      );
+    }
 
     if (result == null) throw AuthenticationException(ERROR_USER_CLOSED);
 
     return result;
   }
 }
+
+class Auth {}
