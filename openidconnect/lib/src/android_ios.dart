@@ -10,6 +10,8 @@ class OpenIdConnectAndroidiOS {
     required int popupHeight,
   }) async {
     //Create the url
+    print("REDIRECT============");
+    print(redirectUrl);
 
     final result = await showDialog<String?>(
       context: context,

@@ -142,6 +142,9 @@ class OpenIdConnect {
   }) async {
     final resultUri = Uri.parse(url);
 
+    print("RESULT===========");
+    print(resultUri);
+
     final error = resultUri.queryParameters['error'];
 
     if (error != null && error.isNotEmpty)
