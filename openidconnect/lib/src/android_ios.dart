@@ -15,6 +15,11 @@ class OpenIdConnectAndroidiOS {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
+        if (Platform.isAndroid) {
+          flutterWebView.WebView.platform =
+              flutterWebView.SurfaceAndroidWebView();
+        }
+
         return AlertDialog(
           actions: [
             IconButton(
