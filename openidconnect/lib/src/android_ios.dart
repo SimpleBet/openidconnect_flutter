@@ -14,8 +14,14 @@ class OpenIdConnectAndroidiOS {
     String? result;
 
     if (Platform.isIOS) {
-      AndroidIosAuth.authenticate(
-          url: authorizationUrl, callbackUrlScheme: redirectUrl);
+      print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n");
+
+      final callbackUrlScheme = redirectUrl.split("://")[0];
+
+      print(callbackUrlScheme);
+
+      result = await AndroidIosAuth.authenticate(
+          url: authorizationUrl, callbackUrlScheme: callbackUrlScheme);
     } else {
       result = await showDialog<String?>(
         context: context,
