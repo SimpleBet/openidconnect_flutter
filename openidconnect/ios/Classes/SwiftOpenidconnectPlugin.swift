@@ -13,8 +13,12 @@ public class SwiftOpenidconnectPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if call.method == "authenticate" {
             let url = URL(string: (call.arguments as! Dictionary<String, AnyObject>)["url"] as! String)!
-            let callbackURLScheme = (call.arguments as! Dictionary<String, AnyObject>)["callbackUrlScheme"] as! String
+            let callbackURLScheme = ((call.arguments as! Dictionary<String, AnyObject>)["callbackUrlScheme"] as! String)
             let preferEphemeral = (call.arguments as! Dictionary<String, AnyObject>)["preferEphemeral"] as! Bool
+            
+            print("LATEST!!!")
+            print(callbackURLScheme)
+            
 
             var sessionToKeepAlive: Any? = nil // if we do not keep the session alive, it will get closed immediately while showing the dialog
             let completionHandler = { (url: URL?, err: Error?) in
@@ -38,7 +42,8 @@ public class SwiftOpenidconnectPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "EUNKNOWN", message: err.localizedDescription, details: nil))
                     return
                 }
-
+                print(url!.absoluteString)
+                
                 result(url!.absoluteString)
             }
 

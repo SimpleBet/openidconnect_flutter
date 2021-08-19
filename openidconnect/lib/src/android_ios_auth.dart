@@ -37,11 +37,14 @@ class AndroidIosAuth {
     WidgetsBinding.instance?.removeObserver(
         _resumedObserver); // safety measure so we never add this observer twice
     WidgetsBinding.instance?.addObserver(_resumedObserver);
-    return await _channel.invokeMethod('authenticate', <String, dynamic>{
+    final result =
+        await _channel.invokeMethod('authenticate', <String, dynamic>{
       'url': url,
-      'callbackUrlScheme': callbackUrlScheme,
+      'callbackUrlScheme': "io.simplebet.playbook",
       'preferEphemeral': preferEphemeral ?? false,
     }) as String;
+
+    return result;
   }
 
   /// On Android, the plugin has to store the Result callbacks in order to pass the result back to the caller of
