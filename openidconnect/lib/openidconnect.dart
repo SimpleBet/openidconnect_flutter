@@ -59,7 +59,7 @@ class OpenIdConnect {
         await httpRetry(() => http.get(Uri.parse(discoveryDocumentUri)));
     if (response == null) {
       throw ArgumentError(
-          "The discovery document could not be found at: ${discoveryDocumentUri}");
+          "The discovery document could not be found at: $discoveryDocumentUri");
     }
 
     return OpenIdConfiguration.fromJson(response);
@@ -91,17 +91,19 @@ class OpenIdConnect {
     );
 
     //These are special cases for the various different platforms because of limitations in pubspec.yaml
-    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-      responseUrl = await AndroidIosAuth.authenticate(
-          url: uri.toString(), callbackUrlScheme: request.redirectUrl);
-      // responseUrl = await OpenIdConnectAndroidiOS.authorizeInteractive(
-      //   context: context,
-      //   title: title,
-      //   authorizationUrl: uri.toString(),
-      //   redirectUrl: request.redirectUrl,
-      //   popupHeight: request.popupHeight,
-      //   popupWidth: request.popupWidth,
-      // );
+    if (!kIsWeb && Platform.isIOS) {
+      responseUrl = await OpenIdConnectiOS.authorizeInteractive(
+          authorizationUrl: uri.toString(),
+          callbackUrlScheme: request.callbackUrlScheme!);
+    } else if (!kIsWeb && Platform.isAndroid) {
+      responseUrl = await OpenIdConnectAndroid.authorizeInteractive(
+        context: context,
+        title: title,
+        authorizationUrl: uri.toString(),
+        redirectUrl: request.redirectUrl,
+        popupHeight: request.popupHeight,
+        popupWidth: request.popupWidth,
+      );
     } else if (!kIsWeb) {
       //TODO add other implementations as they become available. For now, all desktop uses device code flow instead of authorization code flow
       return await OpenIdConnect.authorizeDevice(

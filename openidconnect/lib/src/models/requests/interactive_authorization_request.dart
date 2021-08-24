@@ -10,11 +10,13 @@ class InteractiveAuthorizationRequest extends TokenRequest {
   final String codeChallenge;
   final bool useWebPopup;
   final String redirectUrl;
+  final String? callbackUrlScheme;
 
   static Future<InteractiveAuthorizationRequest> create({
     required String clientId,
     String? clientSecret,
     required String redirectUrl,
+    String? callbackUrlScheme,
     required Iterable<String> scopes,
     required OpenIdConfiguration configuration,
     required bool autoRefresh,
@@ -37,6 +39,7 @@ class InteractiveAuthorizationRequest extends TokenRequest {
     return InteractiveAuthorizationRequest._(
       clientId: clientId,
       redirectUrl: redirectUrl,
+      callbackUrlScheme: callbackUrlScheme,
       scopes: scopes,
       configuration: configuration,
       autoRefresh: autoRefresh,
@@ -56,6 +59,7 @@ class InteractiveAuthorizationRequest extends TokenRequest {
     required String clientId,
     String? clientSecret,
     required this.redirectUrl,
+    this.callbackUrlScheme,
     required Iterable<String> scopes,
     required OpenIdConfiguration configuration,
     required bool autoRefresh,
