@@ -14,6 +14,7 @@ class OpenIdConnectClient {
   final String clientId;
   final String? clientSecret;
   final String? redirectUrl;
+  final String? callbackUrlScheme;
   final bool autoRefresh;
   final bool webUseRefreshTokens;
   final List<String> scopes;
@@ -31,6 +32,7 @@ class OpenIdConnectClient {
     required this.discoveryDocumentUrl,
     required this.clientId,
     this.redirectUrl,
+    this.callbackUrlScheme,
     this.clientSecret,
     this.autoRefresh = true,
     this.webUseRefreshTokens = true,
@@ -43,6 +45,7 @@ class OpenIdConnectClient {
     required String discoveryDocumentUrl,
     required String clientId,
     String? redirectUrl,
+    String? callbackUrlScheme,
     String? clientSecret,
     bool autoRefresh = true,
     bool webUseRefreshTokens = true,
@@ -54,6 +57,7 @@ class OpenIdConnectClient {
       clientId: clientId,
       clientSecret: clientSecret,
       redirectUrl: redirectUrl,
+      callbackUrlScheme: callbackUrlScheme,
       scopes: scopes,
       webUseRefreshTokens: webUseRefreshTokens,
       autoRefresh: autoRefresh,
@@ -228,6 +232,7 @@ class OpenIdConnectClient {
         request: await InteractiveAuthorizationRequest.create(
           configuration: configuration!,
           clientId: clientId,
+          callbackUrlScheme: this.callbackUrlScheme,
           redirectUrl: this.redirectUrl!,
           clientSecret: this.clientSecret,
           loginHint: userNameHint,
@@ -387,7 +392,7 @@ class OpenIdConnectClient {
 
   Future<void> _completeLogin(AuthorizationResponse response) async {
     this._identity = OpenIdIdentity.fromAuthorizationResponse(response);
-
+    // print(_identity.);
     await this._identity!.save();
   }
 

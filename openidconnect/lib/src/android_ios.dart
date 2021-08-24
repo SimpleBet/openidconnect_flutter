@@ -1,6 +1,16 @@
 part of openidconnect;
 
-class OpenIdConnectAndroidiOS {
+class OpenIdConnectiOS {
+  static Future<String> authorizeInteractive({
+    required String authorizationUrl,
+    required String callbackUrlScheme,
+  }) async {
+    return await AndroidIosAuth.authenticate(
+        url: authorizationUrl, callbackUrlScheme: callbackUrlScheme);
+  }
+}
+
+class OpenIdConnectAndroid {
   static Future<String> authorizeInteractive({
     required BuildContext context,
     required String title,
@@ -13,52 +23,39 @@ class OpenIdConnectAndroidiOS {
 
     String? result;
 
-    if (Platform.isIOS) {
-      print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n");
-
-      final callbackUrlScheme = redirectUrl.split("://")[0];
-
-      print(callbackUrlScheme);
-
-      result = await AndroidIosAuth.authenticate(
-          url: authorizationUrl, callbackUrlScheme: callbackUrlScheme);
-    } else {
-      result = await showDialog<String?>(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) {
-          return AlertDialog(
-            actions: [
-              IconButton(
-                onPressed: () => Navigator.pop(dialogContext, null),
-                icon: Icon(Icons.close),
-              ),
-            ],
-            content: Container(
-              width:
-                  min(popupWidth.toDouble(), MediaQuery.of(context).size.width),
-              height: min(
-                  popupHeight.toDouble(), MediaQuery.of(context).size.height),
-              child: flutterWebView.WebView(
-                javascriptMode: flutterWebView.JavascriptMode.unrestricted,
-                initialUrl: authorizationUrl,
-                onPageFinished: (url) {
-                  if (url.startsWith(redirectUrl)) {
-                    Navigator.pop(dialogContext, url);
-                  }
-                },
-              ),
+    result = await showDialog<String?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.pop(dialogContext, null),
+              icon: Icon(Icons.close),
             ),
-            title: Text(title),
-          );
-        },
-      );
-    }
+          ],
+          content: Container(
+            width:
+                min(popupWidth.toDouble(), MediaQuery.of(context).size.width),
+            height:
+                min(popupHeight.toDouble(), MediaQuery.of(context).size.height),
+            child: flutterWebView.WebView(
+              javascriptMode: flutterWebView.JavascriptMode.unrestricted,
+              initialUrl: authorizationUrl,
+              onPageFinished: (url) {
+                if (url.startsWith(redirectUrl)) {
+                  Navigator.pop(dialogContext, url);
+                }
+              },
+            ),
+          ),
+          title: Text(title),
+        );
+      },
+    );
 
     if (result == null) throw AuthenticationException(ERROR_USER_CLOSED);
 
     return result;
   }
 }
-
-class Auth {}
