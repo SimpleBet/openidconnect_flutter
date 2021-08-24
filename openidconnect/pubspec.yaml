@@ -44,3 +44,6 @@ flutter:
         default_package: openidconnect_web
       ios:
         pluginClass: OpenidconnectPlugin
+      android:
+        package: com.openidconnect.openidconnect
+        pluginClass: OpenidconnectPlugin
