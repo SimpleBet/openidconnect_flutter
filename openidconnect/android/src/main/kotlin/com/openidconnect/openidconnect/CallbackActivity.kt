@@ -12,7 +12,7 @@ class CallbackActivity: Activity() {
     val scheme = url?.scheme
 
     if (scheme != null) {
-      FlutterWebAuthPlugin.callbacks.remove(scheme)?.success(url.toString())
+      OpenidconnectPlugin.callbacks.remove(scheme)?.success(url.toString())
     }
 
     finish()
