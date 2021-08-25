@@ -10,16 +10,14 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:openidconnect/src/android_ios_auth.dart';
+import 'package:openidconnect/src/android_ios.dart';
 import 'package:openidconnect_platform_interface/openidconnect_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:retry/retry.dart';
-import 'package:webview_flutter/webview_flutter.dart' as flutterWebView;
 import 'package:url_launcher/url_launcher.dart';
 
 part './src/openidconnect_client.dart';
-part './src/android_ios.dart';
 part './src/helpers.dart';
 
 part './src/models/identity.dart';
@@ -91,19 +89,10 @@ class OpenIdConnect {
     );
 
     //These are special cases for the various different platforms because of limitations in pubspec.yaml
-    if (!kIsWeb && Platform.isIOS) {
-      responseUrl = await OpenIdConnectiOS.authorizeInteractive(
+    if (!kIsWeb && Platform.isIOS || Platform.isAndroid) {
+      responseUrl = await OpenIdConnectAndroidiOS.authorizeInteractive(
           authorizationUrl: uri.toString(),
           callbackUrlScheme: request.callbackUrlScheme!);
-    } else if (!kIsWeb && Platform.isAndroid) {
-      responseUrl = await OpenIdConnectAndroid.authorizeInteractive(
-        context: context,
-        title: title,
-        authorizationUrl: uri.toString(),
-        redirectUrl: request.redirectUrl,
-        popupHeight: request.popupHeight,
-        popupWidth: request.popupWidth,
-      );
     } else if (!kIsWeb) {
       //TODO add other implementations as they become available. For now, all desktop uses device code flow instead of authorization code flow
       return await OpenIdConnect.authorizeDevice(
