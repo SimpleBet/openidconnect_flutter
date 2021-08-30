@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.NonNull
 import androidx.browser.customtabs.CustomTabsIntent
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -17,10 +16,6 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 /** OpenidconnectPlugin */
 class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
   private lateinit var channel : MethodChannel
   private lateinit var context: Context
   private lateinit var activity: Activity
@@ -30,19 +25,17 @@ class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     val callbacks = mutableMapOf<String, Result>()
   }
 
-  override fun onDetachedFromActivity() {
-  }
+  override fun onDetachedFromActivity() {}
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+      this.activity = binding.activity
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    activity = binding.activity;
+      this.activity = binding.activity
   }
 
-  override fun onDetachedFromActivityForConfigChanges() {
-
-  }
+  override fun onDetachedFromActivityForConfigChanges() {}
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "openidconnect")
@@ -50,6 +43,9 @@ class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     context = flutterPluginBinding.applicationContext
   }
 
+  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    channel.setMethodCallHandler(null)
+  }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull resultCallback: Result) {
     when (call.method) {
@@ -58,14 +54,11 @@ class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val callbackUrlScheme = call.argument<String>("callbackUrlScheme")!!
 
         callbacks[callbackUrlScheme] = resultCallback
-        
-        val intent = CustomTabsIntent.Builder().build()
-        val keepAliveIntent = Intent(context, KeepAliveService::class.java)
 
-        intent.intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.intent.putExtra("android.support.customtabs.extra.KEEP_ALIVE", keepAliveIntent)
-
-        intent.launchUrl(context, url)
+        launchCustomTabs(url)
+      }
+      "appID" -> {
+        resultCallback.success(context.packageName)
       }
       "cleanUpDanglingCalls" -> {
         callbacks.forEach{ (_, danglingResultCallback) ->
@@ -78,7 +71,13 @@ class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+  private fun launchCustomTabs(url: Uri) {
+    val intent = CustomTabsIntent.Builder().build()
+    val keepAliveIntent = Intent(activity, KeepAliveService::class.java)
+
+    intent.intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.intent.putExtra("android.support.customtabs.extra.KEEP_ALIVE", keepAliveIntent)
+
+    intent.launchUrl(context, url)
   }
 }

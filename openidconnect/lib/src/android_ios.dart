@@ -3,19 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show MethodChannel;
 
-class _OnAppLifecycleResumeObserver extends WidgetsBindingObserver {
-  final Function onResumed;
-
-  _OnAppLifecycleResumeObserver(this.onResumed);
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      onResumed();
-    }
-  }
-}
-
 class OpenIdConnectAndroidiOS {
   static const MethodChannel _channel = const MethodChannel('openidconnect');
 
@@ -54,5 +41,18 @@ class OpenIdConnectAndroidiOS {
   static Future<void> _cleanUpDanglingCalls() async {
     await _channel.invokeMethod('cleanUpDanglingCalls');
     WidgetsBinding.instance?.removeObserver(_resumedObserver);
+  }
+}
+
+class _OnAppLifecycleResumeObserver extends WidgetsBindingObserver {
+  final Function onResumed;
+
+  _OnAppLifecycleResumeObserver(this.onResumed);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      onResumed();
+    }
   }
 }
