@@ -19,7 +19,10 @@ class OpenidconnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var channel : MethodChannel
   private lateinit var context: Context
   private lateinit var activity: Activity
-  var callbacks  = mutableMapOf<String, Result>()
+
+  companion object {
+    val callbacks = mutableMapOf<String, Result>()
+  }
 
   override fun onDetachedFromActivity() {}
 
