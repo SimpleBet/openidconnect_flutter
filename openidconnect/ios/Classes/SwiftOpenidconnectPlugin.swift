@@ -16,10 +16,6 @@ public class SwiftOpenidconnectPlugin: NSObject, FlutterPlugin {
             let callbackURLScheme = ((call.arguments as! Dictionary<String, AnyObject>)["callbackUrlScheme"] as! String)
             let preferEphemeral = (call.arguments as! Dictionary<String, AnyObject>)["preferEphemeral"] as! Bool
             
-            print("LATEST!!!")
-            print(callbackURLScheme)
-            
-
             var sessionToKeepAlive: Any? = nil // if we do not keep the session alive, it will get closed immediately while showing the dialog
             let completionHandler = { (url: URL?, err: Error?) in
                 sessionToKeepAlive = nil
