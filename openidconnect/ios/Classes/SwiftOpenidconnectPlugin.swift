@@ -35,7 +35,7 @@ public class SwiftOpenidconnectPlugin: NSObject, FlutterPlugin {
                         }
                     }
 
-                    result(FlutterError(code: "EUNKNOWN", message: err.localizedDescription, details: nil))
+                    result(FlutterError(code: "UNKNOWN", message: err.localizedDescription, details: nil))
                     return
                 }
                 print(url!.absoluteString)
