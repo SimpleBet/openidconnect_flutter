@@ -11,7 +11,9 @@ class CallbackActivity: Activity() {
     val scheme = url?.scheme
 
     if (scheme != null) {
-      OpenidconnectPlugin.callbacks.remove(scheme)?.success(url.toString())
+      val resultCallback = OpenidconnectPlugin.callbacks[scheme]
+      OpenidconnectPlugin.callbacks.remove(scheme)
+      resultCallback?.success(url.toString())
     }
 
     finish()
