@@ -89,7 +89,7 @@ class OpenIdConnect {
     );
 
     //These are special cases for the various different platforms because of limitations in pubspec.yaml
-    if (!kIsWeb && Platform.isIOS || Platform.isAndroid) {
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
       responseUrl = await OpenIdConnectAndroidiOS.authorizeInteractive(
           authorizationUrl: uri.toString(),
           callbackUrlScheme: request.callbackUrlScheme!);
