@@ -28,7 +28,7 @@ class OpenIdConnectAndroidiOS {
     final result =
         await _channel.invokeMethod('authenticate', <String, dynamic>{
       'url': authorizationUrl,
-      'callbackUrlScheme': "io.simplebet.playbook",
+      'callbackUrlScheme': callbackUrlScheme,
       'preferEphemeral': preferEphemeral ?? false,
     }) as String;
 
