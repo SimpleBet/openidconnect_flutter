@@ -257,9 +257,9 @@ class OpenIdConnect {
   }
 
   static Future<void> logout({required LogoutRequest request}) async {
-    if (request.configuration.endSessionEndpoint == null) return;
+    if (request.configuration.issuer == null) return;
 
-    final url = Uri.parse(request.configuration.endSessionEndpoint!)
+    final url = Uri.parse("${request.configuration.issuer}v2/logout")
         .replace(queryParameters: request.toMap());
 
     try {
