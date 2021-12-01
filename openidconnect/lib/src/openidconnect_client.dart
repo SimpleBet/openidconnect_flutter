@@ -6,6 +6,7 @@ class OpenIdConnectClient {
     "openid",
     "profile",
     "email",
+    "offline_access",
   ];
 
   final _eventStreamController = StreamController<AuthEvent>();
